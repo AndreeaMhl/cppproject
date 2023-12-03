@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
 #include<string>
+#include<stdio.h>
 
 using namespace std;
 
@@ -149,6 +150,29 @@ public:
         }
         return in;
     }
+
+    //Overloading indexing operator [] for showing the seatsPerRow for a specific Row
+    int operator[](int index) 
+    {
+        if (index > 0 && index < noRows)
+        {
+            return seatsPerRow[index];
+        }
+        else
+        {
+            return -1; //exception to be developed soon
+        }
+    }
+
+    //Overloading arithmetic operator + for adding more seats on a row
+    EventLocation operator+(const EventLocation& obj)
+    {
+        for (int i = 0; i < noRows; i++)
+        {
+            this->seatsPerRow[i] += obj.seatsPerRow[i];
+        }
+        return *this;
+    }
 };
 
 class Event {
@@ -255,6 +279,30 @@ public:
         getline(in, event.name);
 
         return in;
+    }
+
+    //Overloaded ++ operator (prefix) to increment date by one day
+    Event& operator++()
+    {
+        int day, month, year;
+        sscanf(date.c_str(), "%d-%d-%d", &day, &month, &year);
+        ++day;
+        char newDate[11];
+        snprintf(newDate, sizeof(newDate), "%04d-%02d-%02d", day, month, year);
+        date = newDate;
+        return *this;
+    }
+
+    //Overloaded -- operator (postfix) to decrement event date by one day
+    Event operator--(int)
+    {
+        int day, month, year;
+        sscanf(date.c_str(), "%d-%d-%d", &day, &month, &year);
+        --day;
+        char newDate[11];
+        snprintf(newDate, sizeof(newDate), "%04d-%02d-%02d", day, month, year);
+        date = newDate;
+        return *this;
     }
 };
 
@@ -373,6 +421,20 @@ public:
 
         return in;
     }
+
+    //Overloaded negation operator !
+    //Assuming an empty event name means the ticket is not valid
+    bool operator!()
+    {
+        return eventName.empty();
+    }
+
+    //Overloaded less than operator <
+    //To check which ticket was issued first (based on their unique ID)
+    bool operator<(const Ticket& obj)
+    {
+        return id < obj.id;
+    }
 };
 
 //class TicketManager {
@@ -473,6 +535,37 @@ void main()
 
     // Display Ticket details
     cout << "\nTicket 1:\n" << ticket1;
+
+    // Test indexing operator []
+    cout << "Seats in the first row of EventLocation 1: " << loc1[0] << "\n";
+
+    // Test arithmetic operator +
+    EventLocation locSum = loc1 + loc2;
+    cout << "\nEventLocation sum (element-wise addition):\n" << locSum;
+
+    // Test ++ operator (prefix)
+    ++evt1;
+    cout << "\nEvent 1 after prefix increment:\n" << evt1;
+
+    // Test -- operator (postfix)
+    evt2--;
+    cout << "Event 2 after postfix decrement:\n" << evt2;
+
+    // Test negation operator !
+    if (!ticket1) {
+        cout << "Ticket 1 is not valid (eventName is empty)\n";
+    }
+    else {
+        cout << "Ticket 1 is valid\n";
+    }
+
+    // Test relational operators
+    if (ticket1 < ticket2) {
+        cout << "Ticket 1 is less than Ticket 2\n";
+    }
+    else {
+        cout << "Ticket 1 is not less than Ticket 2\n";
+    }
 
     return 0;
 }
