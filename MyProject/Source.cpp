@@ -113,6 +113,42 @@ public:
         }
         return *this;
     }
+
+    //Overloaded << operator for output
+    friend ostream& operator<<(ostream& out, const EventLocation& loc)
+    {
+        out << "Max Seats:" << loc.maxSeats << endl;
+        out << "Zones:" << loc.zones << endl;
+        out << "Number of Rows:" << loc.noRows << endl;
+        out << "Seats Per Row:";
+        for (int i = 0; i < loc.noRows; i++)
+        {
+            out << loc.seatsPerRow[i] << " ";
+        }
+        out << endl;
+        return out;
+    }
+
+    //Overloaded >> operator for input
+    friend istream& operator>>(istream& in, EventLocation& loc)
+    {
+        cout << "Enter Max Seats:";
+        in >> loc.maxSeats;
+
+        cout << "Enter Number of Zones";
+        in >> loc.zones;
+
+        cout << "Enter Number of Rows:";
+        in >> loc.noRows;
+
+        loc.seatsPerRow = new int[loc.noRows];
+        cout << "Enter seats per row:";
+        for (int i = 0; i < loc.noRows; i++)
+        {
+            in >> loc.seatsPerRow[i];
+        }
+        return in;
+    }
 };
 
 class Event {
@@ -194,6 +230,31 @@ public:
             strcpy(name, obj.eventName);
         }
         return *this;
+    }
+
+    //Overloaded << operator for output
+    friend ostream& operator<<(ostream& out, const Event& event)
+    {
+        out << "Date:" << event.date << endl;
+        out << "Time" << event.time << endl;
+        out << "Name:" << event.name << endl;
+        return out;
+    }
+
+    //Overloaded >> operator for input
+    friend istream& operator>>(istream& in, Event& event)
+    {
+        cout << "Enter date (DD-MM-YYYY):";
+        in >> event.date;
+
+        cout << "Enter time:";
+        in >> event.time;
+
+        cout << "Enter name:"
+        in.ignore();
+        getline(in, event.name);
+
+        return in;
     }
 };
 
@@ -282,6 +343,36 @@ public:
         }
         return *this;
     }
+
+    //Overloaded << operator for output
+    friend ostream operator<<(ostream& out, const Ticket& ticket)
+    {
+        out << "ID:" << ticket.id << endl;
+        out << "Type:" << ticket.type << endl;
+        out << "Event name:" << ticket.eventName << endl;
+        out << "Date:" << ticket.date << endl;
+        out << "Time:" << ticket.time << endl;
+        return out;
+    }
+
+    //Overloaded >> operator for input
+    friend istream& operator>>(istream& in, Ticket& ticket)
+    {
+        cout << "Enter type:";
+        in >> ticket.type;
+
+        cout << "Enter event name:";
+        in.ignore();
+        getline(in, ticket.eventName);
+
+        cout << "Enter date:";
+        in >> ticket.date;
+
+        cout << "Enter time:";
+        in >> ticket.date;
+
+        return in;
+    }
 };
 
 //class TicketManager {
@@ -344,6 +435,44 @@ void main()
     cout << "Event Name: " << ticket1.getEventName() << "\n";
     cout << "Date: " << ticket1.getDate() << "\n";
     cout << "Time: " << ticket1.getTime() << "\n";
+
+    // Test EventLocation class
+    EventLocation loc1;
+    cin >> loc1; // Using overloaded >> operator
+    cout << "EventLocation 1:\n" << loc1; // Using overloaded << operator
+
+    EventLocation loc2 = loc1; // Copy constructor
+    EventLocation loc3;
+    loc3 = loc2; // = operator
+
+    // Test Event class
+    Event evt1;
+    cin >> evt1; // Using overloaded >> operator
+    cout << "\nEvent 1:\n" << evt1; // Using overloaded << operator
+
+    Event evt2 = evt1; // Copy constructor
+    Event evt3;
+    evt3 = evt2; // = operator
+
+    // Test Ticket class
+    Ticket::setId(0); // Reset ticket ID for testing purposes
+
+    Ticket ticket1;
+    cin >> ticket1; // Using overloaded >> operator
+    cout << "\nTicket 1:\n" << ticket1; // Using overloaded << operator
+
+    Ticket ticket2 = ticket1; // Copy constructor
+    Ticket ticket3;
+    ticket3 = ticket2; // = operator
+
+    // Display EventLocation details
+    cout << "\nEventLocation 1:\n" << loc1;
+
+    // Display Event details
+    cout << "\nEvent 1:\n" << evt1;
+
+    // Display Ticket details
+    cout << "\nTicket 1:\n" << ticket1;
 
     return 0;
 }
