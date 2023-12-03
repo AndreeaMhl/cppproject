@@ -205,8 +205,8 @@ public:
     {
         this->date = obj.date;
         this->time = obj.time;
-        this->name = new char[strlen(obj.eventName) + 1];
-        strcpy(name, obj.eventName);
+        this->name = new char[strlen(obj.name) + 1];
+        strcpy(name, obj.name);
     }
 
     //Destructor
@@ -243,15 +243,15 @@ public:
     }
 
     //Overloaded = operator
-    Event& operator=(const Event& other)
+    Event& operator=(const Event& obj)
     {
-        if (this != &other)
+        if (this != &obj)
         {
             delete[] name;
             this->date = obj.date;
             this->time = obj.time;
-            this->name = new char[strlen(obj.eventName) + 1];
-            strcpy(name, obj.eventName);
+            this->name = new char[strlen(obj.name) + 1];
+            strcpy(name, obj.name);
         }
         return *this;
     }
@@ -274,7 +274,7 @@ public:
         cout << "Enter time:";
         in >> event.time;
 
-        cout << "Enter name:"
+        cout << "Enter name:";
         in.ignore();
         getline(in, event.name);
 
@@ -339,8 +339,8 @@ public:
     {
         this->type = obj.type;
         this->eventName = obj.eventName;
-        this->date = obj.ticketDate;
-        this->time = obj.ticketTime;
+        this->date = obj.date;
+        this->time = obj.time;
     }
 
     //Destructor
@@ -386,8 +386,8 @@ public:
         {
             this->type = obj.type;
             this->eventName = obj.eventName;
-            this->date = obj.ticketDate;
-            this->time = obj.ticketTime;
+            this->date = obj.date;
+            this->time = obj.time;
         }
         return *this;
     }
@@ -567,5 +567,4 @@ void main()
         cout << "Ticket 1 is not less than Ticket 2\n";
     }
 
-    return 0;
 }
