@@ -12,6 +12,49 @@ private:
     int* seatsPerRow;
 
 public:
+
+    //Default Constructor
+     
+    EventLocation()
+    {
+        this->maxSeats = 0;
+        this->zones = 0;
+        this->noRows = 0;
+        this->seatsPerRow = NULL;
+    }
+
+    //Constructor with all attributes
+    EventLocation(int maxSeats, int zones, int noRows, int* seatsPerRow)
+    {
+        this->maxSeats = maxSeats;
+        this->zones = zones;
+        this->noRows = noRows;
+        this->seatsPerRow = new int[noRows];
+        for (int i = 0; i < noRows; i++)
+        {
+            this->seatsPerRow[i] = seatsPerRow[i];
+        }
+    }
+
+    //Copy Constructor
+    EventLocation(const EventLocation& obj)
+    {
+        this->maxSeats = obj.maxSeats;
+        this->zones = obj.zones;
+        this->noRows = obj.noRows;
+        this->seatsPerRow = new int[obj.noRows];
+        for (int i = 0; i < obj.noRows; i++)
+        {
+            this->seatsPerRow[i] = obj.seatsPerRow[i];
+        }
+    }
+
+    //Destructor
+    ~EventLocation()
+    {
+        delete[] seatsPerRow;
+    }
+
     //Setters
     void setMaxSeats(int seats) {
         if (seats > 0)
@@ -52,6 +95,24 @@ public:
     const int* getSeatsPerRow() {
         return seatsPerRow;
     }
+
+    //Overloaded = operator
+    EventLocation& operator=(const EventLocation& obj)
+    {
+        if (this != &obj)
+        {
+            delete[] seatsPerRow;
+            this->maxSeats = obj.maxSeats;
+            this->zones = obj.zones;
+            this->noRows = obj.noRows;
+            this->seatsPerRow = new int[obj.noRows];
+            for (int i = 0; i < obj.noRows; i++)
+            {
+                this->seatsPerRow[i] = obj.seatsPerRow[i];
+            }
+        }
+        return *this;
+    }
 };
 
 class Event {
@@ -61,6 +122,39 @@ private:
     char* name;
 
 public:
+
+    //Default Constructor
+    Event()
+    {
+        this->date = "Unknown";
+        this->time = "Unknown";
+        this->name = NULL;
+    }
+
+    //Constructor with all attributes
+    Event(string date, string time, char* eventName)
+    {
+        this->date = date;
+        this->time = time;
+        this->name = new char[strlen(eventName) + 1];
+        strcpy(name, eventName);
+    }
+
+    //Copy Constructor
+    Event(const Event& obj)
+    {
+        this->date = obj.date;
+        this->time = obj.time;
+        this->name = new char[strlen(obj.eventName) + 1];
+        strcpy(name, obj.eventName);
+    }
+
+    //Destructor
+    ~Event()
+    {
+        delete[] name;
+    }
+
     // Setters
     void setDate(const string& eventDate) {
         date = eventDate;
@@ -87,6 +181,20 @@ public:
     const char* getName() {
         return name;
     }
+
+    //Overloaded = operator
+    Event& operator=(const Event& other)
+    {
+        if (this != &other)
+        {
+            delete[] name;
+            this->date = obj.date;
+            this->time = obj.time;
+            this->name = new char[strlen(obj.eventName) + 1];
+            strcpy(name, obj.eventName);
+        }
+        return *this;
+    }
 };
 
 class Ticket {
@@ -98,6 +206,40 @@ private:
     string time;
 
 public:
+
+    //Default Constructor
+    Ticket()
+    {
+        this->type = "Unknown";
+        this->eventName = "Unknown";
+        this->date = "Unknown";
+        this->time = "Unknown";
+    }
+
+    //Constructor with all attributes
+    Ticket(const string type, string eventName, string ticketDate, string ticketTime)
+    {
+        this->type = type;
+        this->eventName = eventName;
+        this->date = ticketDate;
+        this->time = ticketTime;
+    }
+
+    //Copy Constructor
+    Ticket(const Ticket& obj)
+    {
+        this->type = obj.type;
+        this->eventName = obj.eventName;
+        this->date = obj.ticketDate;
+        this->time = obj.ticketTime;
+    }
+
+    //Destructor
+    Ticket()
+    {
+        //Assuming no dynamic memory to release
+    }
+
     // Setters
     void setEventName(const string& eventName) {
         this->eventName = eventName;
@@ -127,6 +269,19 @@ public:
     static int getId() {
         return id;
     }
+
+    //Overloaded = operator
+    Ticket& operator=(const Ticket& obj)
+    {
+        if (this != &obj)
+        {
+            this->type = obj.type;
+            this->eventName = obj.eventName;
+            this->date = obj.ticketDate;
+            this->time = obj.ticketTime;
+        }
+        return *this;
+    }
 };
 
 //class TicketManager {
@@ -137,6 +292,58 @@ public:
 
 int Ticket::id = 0;
 
-int main() {
-   
+void main() 
+{
+    // Test EventLocation class
+    EventLocation loc1;
+    loc1.setMaxSeats(100);
+    loc1.setZones(3);
+    loc1.setNoRows(10);
+
+    int seatsPerRow1[] = { 15, 20, 25, 20, 15, 10, 10, 15, 20, 25 };
+    loc1.setSeatsPerRow(seatsPerRow1);
+
+    EventLocation loc2 = loc1; // Copy constructor
+    EventLocation loc3;
+    loc3 = loc2; // = operator
+
+    // Test Event class
+    Event evt1;
+    evt1.setDate("2023-12-25");
+    evt1.setTime("18:00");
+    evt1.setName("Christmas Concert");
+
+    Event evt2 = evt1; // Copy constructor
+    Event evt3;
+    evt3 = evt2; // = operator
+
+    // Test Ticket class
+    Ticket::setId(0); // Reset ticket ID for testing purposes
+
+    Ticket ticket1("VIP", "Christmas Concert", "2023-12-25", "18:00");
+    Ticket ticket2 = ticket1; // Copy constructor
+    Ticket ticket3;
+    ticket3 = ticket2; // = operator
+
+    // Display EventLocation details
+    cout << "EventLocation 1:\n";
+    cout << "Max Seats: " << loc1.getMaxSeats() << "\n";
+    cout << "Zones: " << loc1.getZones() << "\n";
+    cout << "Number of Rows: " << loc1.getNoRows() << "\n";
+
+    // Display Event details
+    cout << "\nEvent 1:\n";
+    cout << "Date: " << evt1.getDate() << "\n";
+    cout << "Time: " << evt1.getTime() << "\n";
+    cout << "Name: " << evt1.getName() << "\n";
+
+    // Display Ticket details
+    cout << "\nTicket 1:\n";
+    cout << "ID: " << ticket1.getId() << "\n";
+    cout << "Type: " << ticket1.getType() << "\n";
+    cout << "Event Name: " << ticket1.getEventName() << "\n";
+    cout << "Date: " << ticket1.getDate() << "\n";
+    cout << "Time: " << ticket1.getTime() << "\n";
+
+    return 0;
 }
