@@ -1,5 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
+#include<fstream>
+#include<vector>
 #include<string>
 #include<stdio.h>
 
@@ -386,6 +388,26 @@ public:
         return type;
     }
 
+    static Ticket getNewTicket() {
+        string type, eventName, date, time;
+
+        cout << "Enter ticket type: ";
+        cin >> type;
+
+        cout << "Enter event name: ";
+        cin.ignore(); // Consume newline character left in the buffer
+        getline(cin, eventName);
+
+        cout << "Enter date (DD-MM-YYYY): ";
+        cin >> date;
+
+        cout << "Enter time: ";
+        cin >> time;
+
+        // Create and return a new Ticket object
+        return Ticket(type, eventName, date, time);
+    }
+
     //Overloaded = operator
     Ticket& operator=(const Ticket& obj)
     {
@@ -444,11 +466,123 @@ public:
     }
 };
 
-//class TicketManager {
-//private:
-//    EventLocation location;
-//    Event event;
-//};
+class TicketManager {
+private:
+    vector<Ticket> tickets;
+
+public:
+    // Function to read data from a file and process it
+    void processFile(const string& filename) {
+        ifstream file(filename);
+
+        if (!file.is_open()) {
+            cerr << "Error: Unable to open file '" << filename << "'\n";
+            return;
+        }
+
+        // Read data from the file and populate the tickets vector
+        while (file) {
+            Ticket ticket;
+            // Read ticket data from the file
+            file >> ticket; 
+            if (file) {
+                tickets.push_back(ticket);
+            }
+        }
+
+        file.close();
+    }
+
+    // Function to display the menu
+    void displayMenu() {
+        cout << "Menu:\n";
+        cout << "1. Display Tickets\n";
+        cout << "2. Add Ticket\n";
+        cout << "3. Save Tickets to File\n";
+        cout << "4. Exit\n";
+    }
+
+    // Function to display tickets
+    void displayTickets() const {
+        if (tickets.empty()) {
+            cout << "No tickets to display.\n";
+        }
+        else {
+            cout << "Tickets:\n";
+            for (const Ticket& ticket : tickets) {
+                cout << ticket << "\n";
+            }
+        }
+    }
+
+    void addTicket(const Ticket& newTicket) {
+        tickets.push_back(newTicket);
+        cout << "Ticket added successfully.\n";
+    }
+
+    // Function to save tickets to a file
+    void saveTicketsToFile(const string& filename) const {
+        ofstream file(filename);
+
+        if (!file.is_open()) {
+            cerr << "Error: Unable to open file '" << filename << "' for writing.\n";
+            return;
+        }
+
+        for (const Ticket& ticket : tickets) {
+            // Assuming you have an appropriate operator<< defined for Ticket
+            file << ticket << "\n";
+        }
+
+        file.close();
+        cout << "Tickets saved to file successfully.\n";
+    }
+
+    void handleMenuChoice() {
+        int choice;
+
+        cout << "Enter your choice: ";
+        cin >> choice;
+
+        switch (choice) {
+        case 1:
+            displayTickets();
+            break;
+        case 2:
+            addTicket(Ticket::getNewTicket());
+            break;
+        case 3:
+            saveTicketsToFile("tickets.txt");
+            break;
+        case 4:
+            cout << "Exiting the program.\n";
+            break;
+        default:
+            cout << "Invalid choice. Please enter a valid option.\n";
+        }
+    }
+
+    // Function to start the ticket management system
+    void start() {
+        int menuChoice;
+
+        // Check for the presence of a command-line argument (filename)
+        if (argc > 1) {
+            // A filename is provided as a command-line argument
+            processFile(argv[1]);
+        }
+
+        do {
+            displayMenu();
+            handleMenuChoice();
+
+            // Ask the user if they want to continue
+            cout << "Do you want to continue? (1 for yes, 0 for no): ";
+            cin >> menuChoice;
+
+        } while (menuChoice != 0);
+    }
+};
 
 int Ticket::id = 0;
 
