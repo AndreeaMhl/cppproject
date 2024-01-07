@@ -275,8 +275,7 @@ public:
         in >> event.time;
 
         cout << "Enter name:";
-        in.ignore();
-        getline(in, event.name);
+        in >> event.name;
 
         return in;
     }
@@ -309,7 +308,7 @@ public:
 class Ticket {
 private:
     static int id;
-    const string type;
+    string type;
     string eventName;
     string date;
     string time;
@@ -344,7 +343,7 @@ public:
     }
 
     //Destructor
-    Ticket()
+    ~Ticket()
     {
         //Assuming no dynamic memory to release
     }
@@ -360,6 +359,10 @@ public:
 
     void setTime(const string& ticketTime) {
         time = ticketTime;
+    }
+
+    void setType(const string& ticketType) {
+        type = ticketType;
     }
 
     // Getters
@@ -379,6 +382,10 @@ public:
         return id;
     }
 
+    const string& getType() const {
+        return type;
+    }
+
     //Overloaded = operator
     Ticket& operator=(const Ticket& obj)
     {
@@ -393,7 +400,7 @@ public:
     }
 
     //Overloaded << operator for output
-    friend ostream operator<<(ostream& out, const Ticket& ticket)
+    friend ostream& operator<<(ostream& out, const Ticket& ticket)
     {
         out << "ID:" << ticket.id << endl;
         out << "Type:" << ticket.type << endl;
@@ -417,7 +424,7 @@ public:
         in >> ticket.date;
 
         cout << "Enter time:";
-        in >> ticket.date;
+        in >> ticket.time;
 
         return in;
     }
@@ -470,9 +477,6 @@ void main()
     Event evt3;
     evt3 = evt2; // = operator
 
-    // Test Ticket class
-    Ticket::setId(0); // Reset ticket ID for testing purposes
-
     Ticket ticket1("VIP", "Christmas Concert", "2023-12-25", "18:00");
     Ticket ticket2 = ticket1; // Copy constructor
     Ticket ticket3;
@@ -515,9 +519,6 @@ void main()
     Event evt2 = evt1; // Copy constructor
     Event evt3;
     evt3 = evt2; // = operator
-
-    // Test Ticket class
-    Ticket::setId(0); // Reset ticket ID for testing purposes
 
     Ticket ticket1;
     cin >> ticket1; // Using overloaded >> operator
