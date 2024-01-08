@@ -17,7 +17,6 @@ private:
 public:
 
     //Default Constructor
-     
     EventLocation()
     {
         this->maxSeats = 0;
@@ -118,37 +117,37 @@ public:
     }
 
     //Overloaded << operator for output
-    friend ostream& operator<<(ostream& out, const EventLocation& loc)
+    friend ostream& operator<<(ostream& out, const EventLocation& obj)
     {
-        out << "Max Seats:" << loc.maxSeats << endl;
-        out << "Zones:" << loc.zones << endl;
-        out << "Number of Rows:" << loc.noRows << endl;
+        out << "Max Seats:" << obj.maxSeats << endl;
+        out << "Zones:" << obj.zones << endl;
+        out << "Number of Rows:" << obj.noRows << endl;
         out << "Seats Per Row:";
-        for (int i = 0; i < loc.noRows; i++)
+        for (int i = 0; i < obj.noRows; i++)
         {
-            out << loc.seatsPerRow[i] << " ";
+            out << obj.seatsPerRow[i] << " ";
         }
         out << endl;
         return out;
     }
 
     //Overloaded >> operator for input
-    friend istream& operator>>(istream& in, EventLocation& loc)
+    friend istream& operator>>(istream& in, EventLocation& obj)
     {
         cout << "Enter Max Seats:";
-        in >> loc.maxSeats;
+        in >> obj.maxSeats;
 
         cout << "Enter Number of Zones";
-        in >> loc.zones;
+        in >> obj.zones;
 
         cout << "Enter Number of Rows:";
-        in >> loc.noRows;
+        in >> obj.noRows;
 
-        loc.seatsPerRow = new int[loc.noRows];
+        obj.seatsPerRow = new int[obj.noRows];
         cout << "Enter seats per row:";
-        for (int i = 0; i < loc.noRows; i++)
+        for (int i = 0; i < obj.noRows; i++)
         {
-            in >> loc.seatsPerRow[i];
+            in >> obj.seatsPerRow[i];
         }
         return in;
     }
@@ -162,7 +161,7 @@ public:
         }
         else
         {
-            return -1; //exception to be developed soon
+            return -1;
         }
     }
 
@@ -190,7 +189,7 @@ public:
     {
         this->date = "Unknown";
         this->time = "Unknown";
-        this->name = NULL;
+        this->name = nullptr;
     }
 
     //Constructor with all attributes
@@ -227,6 +226,7 @@ public:
     }
 
     void setName(const char* eventName) {
+        delete[] name;
         name = new char[strlen(eventName) + 1];
         strcpy(name, eventName);
     }
@@ -259,25 +259,28 @@ public:
     }
 
     //Overloaded << operator for output
-    friend ostream& operator<<(ostream& out, const Event& event)
+    friend ostream& operator<<(ostream& out, const Event& obj)
     {
-        out << "Date:" << event.date << endl;
-        out << "Time" << event.time << endl;
-        out << "Name:" << event.name << endl;
+        out << "Date:" << obj.date << endl;
+        out << "Time" << obj.time << endl;
+        out << "Name:" << obj.name << endl;
         return out;
     }
 
     //Overloaded >> operator for input
-    friend istream& operator>>(istream& in, Event& event)
+    friend istream& operator>>(istream& in, Event& obj)
     {
         cout << "Enter date (DD-MM-YYYY):";
-        in >> event.date;
+        in >> obj.date;
 
         cout << "Enter time:";
-        in >> event.time;
+        in >> obj.time;
 
         cout << "Enter name:";
-        in >> event.name;
+        delete[] obj.name;
+        obj.name = new char[100];
+        in.ignore();
+        in.getline(obj.name, 100);
 
         return in;
     }
@@ -309,7 +312,8 @@ public:
 
 class Ticket {
 private:
-    static int id;
+    static int idCounter;
+    int id;
     string type;
     string eventName;
     string date;
@@ -327,8 +331,9 @@ public:
     }
 
     //Constructor with all attributes
-    Ticket(const string type, string eventName, string ticketDate, string ticketTime)
+    Ticket(string& type, string& eventName, string& ticketDate, string& ticketTime)
     {
+        this->idCounter=idCounter++;
         this->type = type;
         this->eventName = eventName;
         this->date = ticketDate;
@@ -338,6 +343,7 @@ public:
     //Copy Constructor
     Ticket(const Ticket& obj)
     {
+        this->idCounter += obj.idCounter;
         this->type = obj.type;
         this->eventName = obj.eventName;
         this->date = obj.date;
@@ -351,6 +357,14 @@ public:
     }
 
     // Setters
+    static int getIdCounter() {
+        return idCounter;
+    }
+
+    int getId() const{
+        return id;
+    }
+
     void setEventName(const string& eventName) {
         this->eventName = eventName;
     }
@@ -380,10 +394,6 @@ public:
         return time;
     }
 
-    static int getId() {
-        return id;
-    }
-
     const string& getType() const {
         return type;
     }
@@ -395,7 +405,7 @@ public:
         cin >> type;
 
         cout << "Enter event name: ";
-        cin.ignore(); // Consume newline character left in the buffer
+        cin.ignore();
         getline(cin, eventName);
 
         cout << "Enter date (DD-MM-YYYY): ";
@@ -404,7 +414,6 @@ public:
         cout << "Enter time: ";
         cin >> time;
 
-        // Create and return a new Ticket object
         return Ticket(type, eventName, date, time);
     }
 
@@ -422,31 +431,31 @@ public:
     }
 
     //Overloaded << operator for output
-    friend ostream& operator<<(ostream& out, const Ticket& ticket)
+    friend ostream& operator<<(ostream& out, const Ticket& obj)
     {
-        out << "ID:" << ticket.id << endl;
-        out << "Type:" << ticket.type << endl;
-        out << "Event name:" << ticket.eventName << endl;
-        out << "Date:" << ticket.date << endl;
-        out << "Time:" << ticket.time << endl;
+        out << "ID:" << obj.id << endl;
+        out << "Type:" << obj.type << endl;
+        out << "Event name:" << obj.eventName << endl;
+        out << "Date:" << obj.date << endl;
+        out << "Time:" << obj.time << endl;
         return out;
     }
 
     //Overloaded >> operator for input
-    friend istream& operator>>(istream& in, Ticket& ticket)
+    friend istream& operator>>(istream& in, Ticket& obj)
     {
         cout << "Enter type:";
-        in >> ticket.type;
+        in >> obj.type;
 
         cout << "Enter event name:";
         in.ignore();
-        getline(in, ticket.eventName);
+        getline(in, obj.eventName);
 
         cout << "Enter date:";
-        in >> ticket.date;
+        in >> obj.date;
 
         cout << "Enter time:";
-        in >> ticket.time;
+        in >> obj.time;
 
         return in;
     }
@@ -466,7 +475,8 @@ public:
     }
 };
 
-class TicketManager {
+class TicketManager
+{
 private:
     vector<Ticket> tickets;
 
@@ -483,8 +493,7 @@ public:
         // Read data from the file and populate the tickets vector
         while (file) {
             Ticket ticket;
-            // Read ticket data from the file
-            file >> ticket; 
+            file >> ticket;
             if (file) {
                 tickets.push_back(ticket);
             }
@@ -530,7 +539,6 @@ public:
         }
 
         for (const Ticket& ticket : tickets) {
-            // Assuming you have an appropriate operator<< defined for Ticket
             file << ticket << "\n";
         }
 
@@ -540,7 +548,7 @@ public:
 
     void handleMenuChoice() {
         int choice;
-
+        displayMenu();
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -561,145 +569,46 @@ public:
             cout << "Invalid choice. Please enter a valid option.\n";
         }
     }
-
-    // Function to start the ticket management system
-    void start() {
-        int menuChoice;
-
-        // Check for the presence of a command-line argument (filename)
-        if (argc > 1) {
-            // A filename is provided as a command-line argument
-            processFile(argv[1]);
-        }
-
-        do {
-            displayMenu();
-            handleMenuChoice();
-
-            // Ask the user if they want to continue
-            cout << "Do you want to continue? (1 for yes, 0 for no): ";
-            cin >> menuChoice;
-
-        } while (menuChoice != 0);
-    }
 };
 
-int Ticket::id = 0;
+    // Function to start the ticket management system
+//    void start() {
+//        int menuChoice;
+//
+//        // Check for the presence of a command-line argument (filename)
+//        if (argc > 1) {
+//            // A filename is provided as a command-line argument
+//            processFile(argv[1]);
+//        }
+//
+//        do {
+//            displayMenu();
+//            handleMenuChoice();
+//
+//            // Ask the user if they want to continue
+//            cout << "Do you want to continue? (1 for yes, 0 for no): ";
+//            cin >> menuChoice;
+//
+//        } while (menuChoice != 0);
+//    }
+//};
+
+int Ticket::idCounter = 0;
 
 void main() 
 {
-    // Test EventLocation class
-    EventLocation loc1;
-    loc1.setMaxSeats(100);
-    loc1.setZones(3);
-    loc1.setNoRows(10);
+    TicketManager ticketManager;
+    bool exitRequested = false;
 
-    int seatsPerRow1[] = { 15, 20, 25, 20, 15, 10, 10, 15, 20, 25 };
-    loc1.setSeatsPerRow(seatsPerRow1);
+    while (!exitRequested) {
+        ticketManager.displayMenu();
+        ticketManager.handleMenuChoice();
 
-    EventLocation loc2 = loc1; // Copy constructor
-    EventLocation loc3;
-    loc3 = loc2; // = operator
+        int choice;
+        std::cout << "Enter 1 to continue or 0 to exit: ";
+        std::cin >> choice;
 
-    // Test Event class
-    Event evt1;
-    evt1.setDate("2023-12-25");
-    evt1.setTime("18:00");
-    evt1.setName("Christmas Concert");
-
-    Event evt2 = evt1; // Copy constructor
-    Event evt3;
-    evt3 = evt2; // = operator
-
-    Ticket ticket1("VIP", "Christmas Concert", "2023-12-25", "18:00");
-    Ticket ticket2 = ticket1; // Copy constructor
-    Ticket ticket3;
-    ticket3 = ticket2; // = operator
-
-    // Display EventLocation details
-    cout << "EventLocation 1:\n";
-    cout << "Max Seats: " << loc1.getMaxSeats() << "\n";
-    cout << "Zones: " << loc1.getZones() << "\n";
-    cout << "Number of Rows: " << loc1.getNoRows() << "\n";
-
-    // Display Event details
-    cout << "\nEvent 1:\n";
-    cout << "Date: " << evt1.getDate() << "\n";
-    cout << "Time: " << evt1.getTime() << "\n";
-    cout << "Name: " << evt1.getName() << "\n";
-
-    // Display Ticket details
-    cout << "\nTicket 1:\n";
-    cout << "ID: " << ticket1.getId() << "\n";
-    cout << "Type: " << ticket1.getType() << "\n";
-    cout << "Event Name: " << ticket1.getEventName() << "\n";
-    cout << "Date: " << ticket1.getDate() << "\n";
-    cout << "Time: " << ticket1.getTime() << "\n";
-
-    // Test EventLocation class
-    EventLocation loc1;
-    cin >> loc1; // Using overloaded >> operator
-    cout << "EventLocation 1:\n" << loc1; // Using overloaded << operator
-
-    EventLocation loc2 = loc1; // Copy constructor
-    EventLocation loc3;
-    loc3 = loc2; // = operator
-
-    // Test Event class
-    Event evt1;
-    cin >> evt1; // Using overloaded >> operator
-    cout << "\nEvent 1:\n" << evt1; // Using overloaded << operator
-
-    Event evt2 = evt1; // Copy constructor
-    Event evt3;
-    evt3 = evt2; // = operator
-
-    Ticket ticket1;
-    cin >> ticket1; // Using overloaded >> operator
-    cout << "\nTicket 1:\n" << ticket1; // Using overloaded << operator
-
-    Ticket ticket2 = ticket1; // Copy constructor
-    Ticket ticket3;
-    ticket3 = ticket2; // = operator
-
-    // Display EventLocation details
-    cout << "\nEventLocation 1:\n" << loc1;
-
-    // Display Event details
-    cout << "\nEvent 1:\n" << evt1;
-
-    // Display Ticket details
-    cout << "\nTicket 1:\n" << ticket1;
-
-    // Test indexing operator []
-    cout << "Seats in the first row of EventLocation 1: " << loc1[0] << "\n";
-
-    // Test arithmetic operator +
-    EventLocation locSum = loc1 + loc2;
-    cout << "\nEventLocation sum (element-wise addition):\n" << locSum;
-
-    // Test ++ operator (prefix)
-    ++evt1;
-    cout << "\nEvent 1 after prefix increment:\n" << evt1;
-
-    // Test -- operator (postfix)
-    evt2--;
-    cout << "Event 2 after postfix decrement:\n" << evt2;
-
-    // Test negation operator !
-    if (!ticket1) {
-        cout << "Ticket 1 is not valid (eventName is empty)\n";
-    }
-    else {
-        cout << "Ticket 1 is valid\n";
-    }
-
-    // Test relational operators
-    if (ticket1 < ticket2) {
-        cout << "Ticket 1 is less than Ticket 2\n";
-    }
-    else {
-        cout << "Ticket 1 is not less than Ticket 2\n";
+        exitRequested = (choice == 0);
     }
 
 }
