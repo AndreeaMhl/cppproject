@@ -312,12 +312,13 @@ public:
 
 class Ticket {
 private:
-    static int idCounter;
-    int id;
+
     string type;
     string eventName;
     string date;
     string time;
+    static int idCounter;
+    int id;
 
 public:
 
@@ -475,6 +476,8 @@ public:
     }
 };
 
+
+
 class TicketManager
 {
 private:
@@ -500,15 +503,6 @@ public:
         }
 
         file.close();
-    }
-
-    // Function to display the menu
-    void displayMenu() {
-        cout << "Menu:\n";
-        cout << "1. Display Tickets\n";
-        cout << "2. Add Ticket\n";
-        cout << "3. Save Tickets to File\n";
-        cout << "4. Exit\n";
     }
 
     // Function to display tickets
@@ -548,7 +542,6 @@ public:
 
     void handleMenuChoice() {
         int choice;
-        displayMenu();
         cout << "Enter your choice: ";
         cin >> choice;
 
@@ -569,49 +562,66 @@ public:
             cout << "Invalid choice. Please enter a valid option.\n";
         }
     }
-     
-//    //Function to start the ticket management system
-//    void start() {
-//        int menuChoice;
-//
-//         //Check for the presence of a command-line argument (filename)
-//        if (argc > 1) {
-//             //A filename is provided as a command-line argument
-//            processFile(argv[1]);
-//        }
-//
-//        do {
-//            displayMenu();
-//            handleMenuChoice();
-//
-//             //Ask the user if they want to continue
-//            cout << "Do you want to continue? (1 for yes, 0 for no): ";
-//            cin >> menuChoice;
-//
-//        } while (menuChoice != 0);
-//    }
 };
 
 int Ticket::idCounter = 0;
 
 void main() 
 {
+        Event event;
         TicketManager ticketManager;
-        ticketManager.processFile("initial_tickets.txt");
+
         bool exitRequested = false;
 
-        // Debugging output to check the loaded tickets
-        ticketManager.displayTickets();
-
         while (!exitRequested) {
-            ticketManager.displayMenu();
-            ticketManager.handleMenuChoice();
+            cout << "        Hi! I am Mihaila Andreea and this is my project.      \n";
+            cout << "\n-------------------------\n";
+            cout << "        MAIN MENU        \n";
+            cout << "-------------------------\n";
+            cout << "1. Display Event Details\n";
+            cout << "2. Add a New Event\n";
+            cout << "3. Display Ticket Details\n";
+            cout << "4. Add a New Ticket\n";
+            cout << "5. Display Ticket Manager Options\n";
+            cout << "6. Save Tickets to File\n";
+            cout << "7. Exit\n";
+            cout << "-------------------------\n";
 
             int choice;
-            std::cout << "Enter 1 to continue or 0 to exit: ";
-            std::cin >> choice;
+            cout << "Enter your choice: ";
+            cin >> choice;
 
-            exitRequested = (choice == 0);
+            switch (choice) {
+            case 1:
+                cout << "\n--- Event Details ---\n";
+                cout << event << "\n";
+                break;
+            case 2:
+                cout << "\n--- Add a New Event ---\n";
+                cin >> event;
+                break;
+            case 3:
+                cout << "\n--- Ticket Details ---\n";
+                ticketManager.displayTickets();
+                break;
+            case 4:
+                cout << "\n--- Add a New Ticket ---\n";
+                ticketManager.addTicket(Ticket::getNewTicket());
+                break;
+            case 5:
+                cout << "\n--- Ticket Manager Options ---\n";
+                ticketManager.handleMenuChoice();
+                break;
+            case 6:
+                cout << "\n--- Save Tickets to File ---\n";
+                ticketManager.saveTicketsToFile("tickets.txt");
+                break;
+            case 7:
+                cout << "Exiting the program.\n";
+                exitRequested = true;
+                break;
+            default:
+                cout << "Invalid choice. Please enter a valid option.\n";
+            }
         }
-
 }
