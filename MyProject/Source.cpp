@@ -569,15 +569,14 @@ public:
             cout << "Invalid choice. Please enter a valid option.\n";
         }
     }
-};
-
-    // Function to start the ticket management system
+     
+//    //Function to start the ticket management system
 //    void start() {
 //        int menuChoice;
 //
-//        // Check for the presence of a command-line argument (filename)
+//         //Check for the presence of a command-line argument (filename)
 //        if (argc > 1) {
-//            // A filename is provided as a command-line argument
+//             //A filename is provided as a command-line argument
 //            processFile(argv[1]);
 //        }
 //
@@ -585,30 +584,34 @@ public:
 //            displayMenu();
 //            handleMenuChoice();
 //
-//            // Ask the user if they want to continue
+//             //Ask the user if they want to continue
 //            cout << "Do you want to continue? (1 for yes, 0 for no): ";
 //            cin >> menuChoice;
 //
 //        } while (menuChoice != 0);
 //    }
-//};
+};
 
 int Ticket::idCounter = 0;
 
 void main() 
 {
-    TicketManager ticketManager;
-    bool exitRequested = false;
+        TicketManager ticketManager;
+        ticketManager.processFile("initial_tickets.txt");
+        bool exitRequested = false;
 
-    while (!exitRequested) {
-        ticketManager.displayMenu();
-        ticketManager.handleMenuChoice();
+        // Debugging output to check the loaded tickets
+        ticketManager.displayTickets();
 
-        int choice;
-        std::cout << "Enter 1 to continue or 0 to exit: ";
-        std::cin >> choice;
+        while (!exitRequested) {
+            ticketManager.displayMenu();
+            ticketManager.handleMenuChoice();
 
-        exitRequested = (choice == 0);
-    }
+            int choice;
+            std::cout << "Enter 1 to continue or 0 to exit: ";
+            std::cin >> choice;
+
+            exitRequested = (choice == 0);
+        }
 
 }
