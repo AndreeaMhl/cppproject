@@ -174,6 +174,95 @@ public:
         }
         return *this;
     }
+
+    static EventLocation getNewEventLocation() {
+        int maxSeats, zones, noRows;
+
+        cout << "Enter Max Seats: ";
+        cin >> maxSeats;
+
+        cout << "Enter Number of Zones: ";
+        cin >> zones;
+
+        cout << "Enter Number of Rows: ";
+        cin >> noRows;
+
+        int* seatsPerRow = new int[noRows];
+        cout << "Enter seats per row: ";
+        for (int i = 0; i < noRows; i++) {
+            cin >> seatsPerRow[i];
+        }
+
+        return EventLocation(maxSeats, zones, noRows, seatsPerRow);
+    }
+
+    void editEventLocationDetails() {
+        int choice;
+
+        cout << "Edit Event Location Details:\n";
+        cout << "1. Max Seats\n";
+        cout << "2. Number of Zones\n";
+        cout << "3. Number of Rows\n";
+        cout << "4. Seats Per Row\n";
+        cout << "5. Exit\n";
+
+        cout << "Enter your choice: ";
+        cin >> choice;
+        int* newSeatsPerRow;
+
+        switch (choice) {
+        case 1:
+            int newMaxSeats;
+            cout << "Enter new Max Seats: ";
+            cin >> newMaxSeats;
+            setMaxSeats(newMaxSeats);
+            break;
+
+        case 2:
+            int newZones;
+            cout << "Enter new Number of Zones: ";
+            cin >> newZones;
+            setZones(newZones);
+            break;
+
+        case 3:
+            int newNoRows;
+            cout << "Enter new Number of Rows: ";
+            cin >> newNoRows;
+            setNoRows(newNoRows);
+            break;
+
+        case 4:
+            newSeatsPerRow = new int[getNoRows()];
+            cout << "Enter new Seats Per Row: ";
+            for (int i = 0; i < getNoRows(); i++) {
+                cin >> newSeatsPerRow[i];
+            }
+            setSeatsPerRow(newSeatsPerRow);
+            break;
+
+        case 5:
+            cout << "Exiting edit menu.\n";
+            break;
+
+        default:
+            cout << "Invalid choice. Please enter a valid option.\n";
+        }
+    }
+
+    void displayEventLocationDetails() {
+        cout << "Event Location Details:\n";
+        cout << "Max Seats: " << getMaxSeats() << endl;
+        cout << "Number of Zones: " << getZones() << endl;
+        cout << "Number of Rows: " << getNoRows() << endl;
+
+        const int* seatsPerRow = getSeatsPerRow();
+        cout << "Seats Per Row: ";
+        for (int i = 0; i < getNoRows(); i++) {
+            cout << seatsPerRow[i] << " ";
+        }
+        cout << endl;
+    }
 };
 
 class Event {
@@ -189,7 +278,7 @@ public:
     {
         this->date = "Unknown";
         this->time = "Unknown";
-        this->name = nullptr;
+        this->name = NULL;
     }
 
     //Constructor with all attributes
@@ -542,21 +631,33 @@ public:
 
     void handleMenuChoice() {
         int choice;
+        cout << "\n-------------------------\n";
+        cout << "   TICKET MANAGER MENU   \n";
+        cout << "-------------------------\n";
+        cout << "1. Display Tickets\n";
+        cout << "2. Add a New Ticket\n";
+        cout << "3. Save Tickets to File\n";
+        cout << "4. Back to Main Menu\n";
+        cout << "-------------------------\n";
+
         cout << "Enter your choice: ";
         cin >> choice;
 
         switch (choice) {
         case 1:
+            cout << "\n--- Displaying Tickets ---\n";
             displayTickets();
             break;
         case 2:
+            cout << "\n--- Adding a New Ticket ---\n";
             addTicket(Ticket::getNewTicket());
             break;
         case 3:
+            cout << "\n--- Saving Tickets to File ---\n";
             saveTicketsToFile("tickets.txt");
             break;
         case 4:
-            cout << "Exiting the program.\n";
+            cout << "Returning to Main Menu.\n";
             break;
         default:
             cout << "Invalid choice. Please enter a valid option.\n";
@@ -568,30 +669,42 @@ int Ticket::idCounter = 0;
 
 void main() 
 {
-        Event event;
-        TicketManager ticketManager;
+    TicketManager ticketManager;
+    Event event;
+    Ticket ticket;
+    vector<EventLocation> eventLocations;
+    int choice;
 
-        bool exitRequested = false;
+    bool exitRequested = false;
+    cout << "Hello! I am Andreea Mihaila and I am glad to welcome you to my project! \n";
+    cout << "This app can manage Events, Tickets for events and Events Locations. \n";
+    cout << "Hope you like it! \n";
+    cout << endl;
+    cout << endl;
 
-        while (!exitRequested) {
-            cout << "        Hi! I am Mihaila Andreea and this is my project.      \n";
-            cout << "\n-------------------------\n";
-            cout << "        MAIN MENU        \n";
-            cout << "-------------------------\n";
-            cout << "1. Display Event Details\n";
-            cout << "2. Add a New Event\n";
-            cout << "3. Display Ticket Details\n";
-            cout << "4. Add a New Ticket\n";
-            cout << "5. Display Ticket Manager Options\n";
-            cout << "6. Save Tickets to File\n";
-            cout << "7. Exit\n";
-            cout << "-------------------------\n";
+    while (!exitRequested) {
+        cout << "Main Menu:\n";
+        cout << "1. Manage Events\n";
+        cout << "2. Manage Tickets\n";
+        cout << "3. Manage Event Locations\n";
+        cout << "4. Exit\n";
 
-            int choice;
+        int mainChoice;
+        cout << "Enter your choice: ";
+        cin >> mainChoice;
+
+        switch (mainChoice) {
+        case 1: // Events
+            cout << "Events Menu:\n";
+            cout << "1. Display Events\n";
+            cout << "2. Add Event\n";
+            cout << "3. Back to Main Menu\n";
+
+            int eventChoice;
             cout << "Enter your choice: ";
-            cin >> choice;
+            cin >> eventChoice;
 
-            switch (choice) {
+            switch (eventChoice) {
             case 1:
                 cout << "\n--- Event Details ---\n";
                 cout << event << "\n";
@@ -601,27 +714,98 @@ void main()
                 cin >> event;
                 break;
             case 3:
-                cout << "\n--- Ticket Details ---\n";
-                ticketManager.displayTickets();
-                break;
-            case 4:
-                cout << "\n--- Add a New Ticket ---\n";
-                ticketManager.addTicket(Ticket::getNewTicket());
-                break;
-            case 5:
-                cout << "\n--- Ticket Manager Options ---\n";
-                ticketManager.handleMenuChoice();
-                break;
-            case 6:
-                cout << "\n--- Save Tickets to File ---\n";
-                ticketManager.saveTicketsToFile("tickets.txt");
-                break;
-            case 7:
-                cout << "Exiting the program.\n";
-                exitRequested = true;
+                cout << "\n--- Back to Main Menu ---\n";
                 break;
             default:
                 cout << "Invalid choice. Please enter a valid option.\n";
+                break;
             }
+            break;
+        case 2: // Tickets
+            cout << "Tickets Menu:\n";
+            cout << "1. Display Tickets\n";
+            cout << "2. Add Ticket\n";
+            cout << "3. Save Tickets to File\n";
+            cout << "4. Back to Main Menu\n";
+
+            int ticketChoice;
+            cout << "Enter your choice: ";
+            cin >> ticketChoice;
+
+            switch (ticketChoice) {
+            case 1:
+                ticketManager.displayTickets();
+                break;
+            case 2:
+                ticketManager.addTicket(Ticket::getNewTicket());
+                break;
+            case 3:
+                ticketManager.saveTicketsToFile("tickets.txt");
+                break;
+            case 4:
+                break;
+            default:
+                cout << "Invalid choice. Please enter a valid option.\n";
+                break;
+            }
+            break;
+        case 3: // EventLocation
+            do {
+                cout << "1. Add Event Location\n"
+                    << "2. Edit Event Location\n"
+                    << "3. Display Event Location Details\n"
+                    << "4. Exit\n";
+                cout << "Enter your choice: ";
+                cin >> choice;
+
+                switch (choice) {
+                case 1: {
+                    EventLocation newEventLocation = EventLocation::getNewEventLocation();
+                    eventLocations.push_back(newEventLocation);
+                    cout << "Event Location added successfully!\n";
+                    break;
+                }
+                case 2: {
+                    int index;
+                    cout << "Enter the index of the Event Location to edit: ";
+                    cin >> index;
+                    if (index >= 0 && index < eventLocations.size()) {
+                        eventLocations[index].editEventLocationDetails();
+                        cout << "Event Location edited successfully!\n";
+                    }
+                    else {
+                        cout << "Invalid index.\n";
+                    }
+                    break;
+                }
+                case 3: {
+                    int index;
+                    cout << "Enter the index of the Event Location to display details: ";
+                    cin >> index;
+                    if (index >= 0 && index < eventLocations.size()) {
+                        eventLocations[index].displayEventLocationDetails();
+                    }
+                    else {
+                        cout << "Invalid index.\n";
+                    }
+                    break;
+                }
+                case 4:
+                    cout << "Back to Main Menu";
+                    break;
+                default:
+                    cout << "Invalid choice. Please enter a valid option.\n";
+                }
+
+            } while (choice != 4); 
+        case 4:
+            cout << "Exit. ";
+            exitRequested = true;
+            cout << "Exiting the program.\n";
+            break;
+        default:
+            cout << "Invalid choice. Please enter a valid option.\n";
+            break;
         }
+    }
 }
